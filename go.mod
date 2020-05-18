@@ -1,3 +1,3 @@
-module github.com/ya5u/gofsevent
+module github.com/ya5u/fsevent
 
 go 1.13
