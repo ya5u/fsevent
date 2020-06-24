@@ -1,22 +1,12 @@
-package gofsevent
-
-import "time"
+package fsevent
 
 // FirestoreEvent is the payload of a Firestore event.
 type FirestoreEvent struct {
-	OldValue   *FirestoreValue `json:"oldValue"`
-	Value      *FirestoreValue `json:"value"`
+	OldValue   *Value `json:"oldValue"`
+	Value      *Value `json:"value"`
 	UpdateMask *struct {
 		FieldPaths []string `json:"fieldPaths"`
 	} `json:"updateMask"`
-}
-
-// FirestoreValue holds Firestore fields.
-type FirestoreValue struct {
-	CreateTime time.Time   `json:"createTime"`
-	Fields     interface{} `json:"fields"`
-	Name       string      `json:"name"`
-	UpdateTime time.Time   `json:"updateTime"`
 }
 
 // Type is method of FirestoreEvent which returns Event Type.
