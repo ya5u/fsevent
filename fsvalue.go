@@ -36,7 +36,6 @@ func (v *Value) DataTo(p interface{}) error {
 				continue
 			}
 			tag := f.Tag.Get("firestore")
-			fmt.Println(tag, f.Type, f.Type.Kind())
 			switch f.Type {
 			case reflect.TypeOf(time.Time{}):
 				ts, ok := v.Fields[tag]["timestampValue"].(string)
