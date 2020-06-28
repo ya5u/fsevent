@@ -1,5 +1,11 @@
 package fsevent
 
+const (
+	TypeCreate = iota
+	TypeUpdate
+	TypeDelete
+)
+
 // FirestoreEvent is the payload of a Firestore event.
 type FirestoreEvent struct {
 	OldValue   *Value `json:"oldValue"`
