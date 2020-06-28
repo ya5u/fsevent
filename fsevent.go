@@ -16,12 +16,12 @@ type FirestoreEvent struct {
 }
 
 // Type is method of FirestoreEvent which returns Event Type.
-func (e *FirestoreEvent) Type() string {
+func (e *FirestoreEvent) Type() int {
 	if len(e.UpdateMask.FieldPaths) > 0 {
-		return "Update"
+		return TypeUpdate
 	}
 	if len(e.Value.Name) > 0 {
-		return "Create"
+		return TypeCreate
 	}
-	return "Delete"
+	return TypeDelete
 }
