@@ -1,9 +1,10 @@
 package fsevent
 
+// event types
 const (
-	TypeCreate = iota
-	TypeUpdate
-	TypeDelete
+	TypeCreate = iota // on a document created
+	TypeUpdate        // on a document updated
+	TypeDelete        // on a document deleted
 )
 
 // FirestoreEvent is the payload of a Firestore event.
@@ -15,7 +16,10 @@ type FirestoreEvent struct {
 	} `json:"updateMask"`
 }
 
-// Type is method of FirestoreEvent which returns Event Type.
+// Type returns event type, which is one of following constants:
+//   - TypeCreate
+//   - TypeUpdate
+//   - TypeDelete
 func (e *FirestoreEvent) Type() int {
 	if len(e.UpdateMask.FieldPaths) > 0 {
 		return TypeUpdate
