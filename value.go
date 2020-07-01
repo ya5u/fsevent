@@ -10,7 +10,7 @@ import (
 	"google.golang.org/genproto/googleapis/type/latlng"
 )
 
-// FirestoreValue holds Firestore fields.
+// Value holds Firestore fields.
 type Value struct {
 	CreateTime time.Time                         `json:"createTime"`
 	Fields     map[string]map[string]interface{} `json:"fields"`
@@ -18,6 +18,8 @@ type Value struct {
 	UpdateTime time.Time                         `json:"updateTime"`
 }
 
+// DataTo uses the document's fields to populate p, which can be a pointer to a
+// map[string]interface{} or a pointer to a struct.
 func (v *Value) DataTo(p interface{}) error {
 	rv := reflect.ValueOf(p)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
