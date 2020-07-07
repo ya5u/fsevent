@@ -48,6 +48,9 @@ func (v *Value) DataTo(p interface{}) error {
 				if err != nil {
 					return err
 				}
+				if t == nil {
+					continue
+				}
 				crv.Field(i).Set(reflect.ValueOf(*t))
 				continue
 			case reflect.TypeOf(&time.Time{}):
@@ -62,6 +65,9 @@ func (v *Value) DataTo(p interface{}) error {
 				if err != nil {
 					return err
 				}
+				if b == nil {
+					continue
+				}
 				crv.Field(i).Set(reflect.ValueOf(*b))
 				continue
 			case reflect.TypeOf(&[]byte{}):
@@ -74,7 +80,11 @@ func (v *Value) DataTo(p interface{}) error {
 			case reflect.TypeOf(latlng.LatLng{}):
 				return fmt.Errorf("fsevent: LatLng must be pointer")
 			case reflect.TypeOf(&latlng.LatLng{}):
-				gm, ok := v.Fields[tag]["geoPointValue"].(map[string]interface{})
+				geo := v.Fields[tag]["geoPointValue"]
+				if geo == nil {
+					continue
+				}
+				gm, ok := geo.(map[string]interface{})
 				if !ok {
 					return fmt.Errorf("fsevent: %s is not geoPoint map", tag)
 				}
@@ -96,13 +106,21 @@ func (v *Value) DataTo(p interface{}) error {
 
 			switch f.Type.Kind() {
 			case reflect.Bool:
-				fv, ok := v.Fields[tag]["booleanValue"].(bool)
+				bv := v.Fields[tag]["booleanValue"]
+				if bv == nil {
+					continue
+				}
+				fv, ok := bv.(bool)
 				if !ok {
 					return fmt.Errorf("fsevent: %s is not bool", tag)
 				}
 				crv.Field(i).SetBool(fv)
 			case reflect.Int64:
-				fv, ok := v.Fields[tag]["integerValue"].(string)
+				iv := v.Fields[tag]["integerValue"]
+				if iv == nil {
+					continue
+				}
+				fv, ok := iv.(string)
 				if !ok {
 					return fmt.Errorf("fsevent: %s is not int string", tag)
 				}
@@ -112,18 +130,35 @@ func (v *Value) DataTo(p interface{}) error {
 				}
 				crv.Field(i).SetInt(ifv)
 			case reflect.Float64:
-				fv, ok := v.Fields[tag]["doubleValue"].(float64)
+				dv := v.Fields[tag]["doubleValue"]
+				iv := v.Fields[tag]["integerValue"]
+				var fv float64
+				var ok bool
+				if dv != nil {
+					fv, ok = dv.(float64)
+				} else if iv != nil {
+					fv, ok = iv.(float64)
+				} else {
+					continue
+				}
 				if !ok {
 					return fmt.Errorf("fsevent: %s is not float64", tag)
 				}
 				crv.Field(i).SetFloat(fv)
 			case reflect.String:
-				fv, ok := v.Fields[tag]["stringValue"].(string)
+				sv := v.Fields[tag]["stringValue"]
+				rv := v.Fields[tag]["referenceValue"]
+				var fv string
+				var ok bool
+				if sv != nil {
+					fv, ok = sv.(string)
+				} else if rv != nil {
+					fv, ok = rv.(string)
+				} else {
+					continue
+				}
 				if !ok {
-					fv, ok = v.Fields[tag]["referenceValue"].(string)
-					if !ok {
-						return fmt.Errorf("fsevent: %s is not string", tag)
-					}
+					return fmt.Errorf("fsevent: %s is not string", tag)
 				}
 				crv.Field(i).SetString(fv)
 			default:
@@ -135,7 +170,11 @@ func (v *Value) DataTo(p interface{}) error {
 }
 
 func reflectTime(tag string, field map[string]interface{}) (*time.Time, error) {
-	ts, ok := field["timestampValue"].(string)
+	tv := field["timestampValue"]
+	if tv == nil {
+		return nil, nil
+	}
+	ts, ok := tv.(string)
 	if !ok {
 		return nil, fmt.Errorf("fsevent: %s is not timestamp string", tag)
 	}
@@ -147,7 +186,11 @@ func reflectTime(tag string, field map[string]interface{}) (*time.Time, error) {
 }
 
 func reflectBytes(tag string, field map[string]interface{}) (*[]byte, error) {
-	bs, ok := field["bytesValue"].(string)
+	bv := field["bytesValue"]
+	if bv == nil {
+		return nil, nil
+	}
+	bs, ok := bv.(string)
 	if !ok {
 		return nil, fmt.Errorf("fsevent: %s is not bytes string", tag)
 	}

@@ -152,8 +152,6 @@ var dataToOkTests = []dataToOkTest{
 			"",
 		},
 	},
-}
-var dataToErrTests = []dataToErrTest{
 	{
 		`{"fields": {
 			"str": {
@@ -181,8 +179,22 @@ var dataToErrTests = []dataToErrTest{
 				}
 			}
 		}}`,
-		fmt.Errorf("fsevent: str is not string"),
+		data{
+			false,
+			3,
+			0.0,
+			&testTime,
+			testTime,
+			"",
+			&testBytes,
+			testBytes,
+			"",
+			&testLatLng,
+			"",
+		},
 	},
+}
+var dataToErrTests = []dataToErrTest{
 	{
 		`{"fields": {
 			"str": {
