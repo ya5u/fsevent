@@ -14,9 +14,9 @@ type data struct {
 	Bool   bool           `firestore:"bool"`
 	Int    int64          `firestore:"int"`
 	Float  float64        `firestore:"float"`
-	TimeP  *time.Time     `firestore:"timeP"`
+	TimeP  *time.Time     `firestore:"timeP,serverTimestamp"`
 	Time   time.Time      `firestore:"time"`
-	Str    string         `firestore:"str"`
+	Str    string         `firestore:"str,omitempty"`
 	BytesP *[]byte        `firestore:"bytesP"`
 	Bytes  []byte         `firestore:"bytes"`
 	Ref    string         `firestore:"ref"`
@@ -118,19 +118,7 @@ var dataToOkTests = []dataToOkTest{
 	},
 	{
 		`{"fields": {}}`,
-		data{
-			false,
-			0,
-			0.0,
-			nil,
-			time.Time{},
-			"",
-			nil,
-			[]byte{},
-			"",
-			nil,
-			"",
-		},
+		data{},
 	},
 	{
 		`{"fields": {
@@ -138,19 +126,7 @@ var dataToOkTests = []dataToOkTest{
 				"stringValue": "this field doesn't defined"
 			}
 		}}`,
-		data{
-			false,
-			0,
-			0.0,
-			nil,
-			time.Time{},
-			"",
-			nil,
-			[]byte{},
-			"",
-			nil,
-			"",
-		},
+		data{},
 	},
 	{
 		`{"fields": {
@@ -210,7 +186,7 @@ var dataToErrTests = []dataToErrTest{
 				"bytesValue": "dGhpcyBpcyBieXRlcy4="
 			}
 		}}`,
-		fmt.Errorf("fsevent: int is not int64"),
+		fmt.Errorf("fsevent: int is not int string"),
 	},
 }
 
@@ -230,7 +206,9 @@ func TestValue_DataTo(t *testing.T) {
 			t.Error(err)
 			continue
 		}
-		reflect.DeepEqual(p, test.exp)
+		if !reflect.DeepEqual(p, test.exp) {
+			t.Errorf("\nexpected:%+v \nactual:%+v", test.exp, p)
+		}
 	}
 	// Error cases
 	for _, test := range dataToErrTests {
@@ -247,6 +225,8 @@ func TestValue_DataTo(t *testing.T) {
 			t.Errorf("%s DataTo %+v must be failed", test.blob, p)
 			continue
 		}
-		reflect.DeepEqual(p, test.exp)
+		if !reflect.DeepEqual(err, test.exp) {
+			t.Errorf("\nexpected:%+v \nactual:%+v", test.exp, err)
+		}
 	}
 }
