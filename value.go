@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"reflect"
 	"strconv"
+	"strings"
 	"time"
 
 	"google.golang.org/genproto/googleapis/type/latlng"
@@ -38,6 +39,8 @@ func (v *Value) DataTo(p interface{}) error {
 				continue
 			}
 			tag := f.Tag.Get("firestore")
+			parts := strings.Split(tag, ",")
+			tag = parts[0]
 			if v.Fields[tag] == nil {
 				// skip fields that have no value
 				continue
