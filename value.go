@@ -105,6 +105,20 @@ func (v *Value) DataTo(p interface{}) error {
 				}
 				crv.Field(i).Set(reflect.ValueOf(&ll))
 				continue
+			case reflect.TypeOf(new(int64)):
+				i64, err := reflectInt64(tag, v.Fields[tag])
+				if err != nil {
+					return err
+				}
+				crv.Field(i).Set(reflect.ValueOf(i64))
+				continue
+			case reflect.TypeOf(new(float64)):
+				f64, err := reflectFloat64(tag, v.Fields[tag])
+				if err != nil {
+					return err
+				}
+				crv.Field(i).Set(reflect.ValueOf(f64))
+				continue
 			}
 
 			switch f.Type.Kind() {
@@ -202,4 +216,36 @@ func reflectBytes(tag string, field map[string]interface{}) (*[]byte, error) {
 		return nil, fmt.Errorf("fsevent: failed to decode bytes string on %s. %v", tag, err)
 	}
 	return &b, nil
+}
+
+func reflectInt64(tag string, field map[string]interface{}) (*int64, error) {
+	iv := field["integerValue"]
+	if iv == nil {
+		return nil, nil
+	}
+	is, ok := iv.(string)
+	if !ok {
+		return nil, fmt.Errorf("fsevent: %s is not int64 string", tag)
+	}
+	i, err := strconv.ParseInt(is, 10, 64)
+	if err != nil {
+		return nil, fmt.Errorf("fsevent: failed to parse int64 on %s. %v", tag, err)
+	}
+	return &i, nil
+}
+
+func reflectFloat64(tag string, field map[string]interface{}) (*float64, error) {
+	fv := field["doubleValue"]
+	if fv == nil {
+		return nil, nil
+	}
+	fs, ok := fv.(string)
+	if !ok {
+		return nil, fmt.Errorf("fsevent: %s is not float64 string", tag)
+	}
+	f, err := strconv.ParseFloat(fs, 64)
+	if err != nil {
+		return nil, fmt.Errorf("fsevent: failed to parse float64 on %s. %v", tag, err)
+	}
+	return &f, nil
 }
