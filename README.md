@@ -64,6 +64,14 @@ func Handler(ctx context.Context, e fsevent.FirestoreEvent) error {
 }
 ```
 
+## TODO
+
+* [ ] support primitive pointer types
+* [ ] support Arrays
+* [ ] support Maps
+* [ ] support References
+* [ ] implement method of Value type like firestore.DocumentSnapshot.Data
+
 ## Licence
 
 [MIT](https://github.com/ya5u/fsevent/blob/master/LICENSE)
