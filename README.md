@@ -38,12 +38,14 @@ import (
   "github.com/ya5u/fsevent"
 )
 
+// FsData is defined type for firestore as you like
 type FsData struct {
   Name     string     `firestore:"name"`
   Age      int64      `firestore:"age"`
   Birthday *time.Time `firestore:"birthday"`
 }
 
+// Handler is the entry point of Cloud Functions triggered by firestore event
 func Handler(ctx context.Context, e fsevent.FirestoreEvent) error {
   // get event type
   eventType := e.Type()
@@ -66,9 +68,9 @@ func Handler(ctx context.Context, e fsevent.FirestoreEvent) error {
 
 ## TODO
 
-* [ ] support primitive pointer types
-* [ ] support Arrays
-* [ ] support Maps
+* [x] support primitive pointer types
+* [x] support Arrays
+* [x] support Maps
 * [ ] support References
 * [ ] implement method of Value type like firestore.DocumentSnapshot.Data
 
