@@ -201,6 +201,12 @@ var dataToTests = []dataToTest{
 			},
 			"bytes": {
 				"bytesValue": "dGhpcyBpcyBieXRlcy4="
+			},
+			"arrstr": {
+				"arrayValue": {}
+			},
+			"structmap": {
+				"mapValue": {}
 			}
 		}}`,
 		data{

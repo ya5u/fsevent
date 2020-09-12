@@ -272,6 +272,9 @@ func reflectArray(field map[string]interface{}, tag string) ([]interface{}, erro
 		return nil, fmt.Errorf("fsevent: %s is not array", tag)
 	}
 	iv := am["values"]
+	if iv == nil {
+		return nil, nil
+	}
 	vs, ok := iv.([]interface{})
 	if !ok {
 		return nil, fmt.Errorf("fsevent: %s is not array", tag)
@@ -285,6 +288,9 @@ func reflectMap(field map[string]interface{}, tag string) (map[string]interface{
 		return nil, fmt.Errorf("fsevent: %s is not map", tag)
 	}
 	fs := mv["fields"]
+	if fs == nil {
+		return nil, nil
+	}
 	fsm, ok := fs.(map[string]interface{})
 	if !ok {
 		return nil, fmt.Errorf("fsevent: %s is not map", tag)
