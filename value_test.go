@@ -108,6 +108,9 @@ var dataToTests = []dataToTest{
 					"values": [
 						{
 							"stringValue": "string in array"
+						},
+						{
+							"stringValue": "another string in array"
 						}
 					]
 				}
@@ -158,7 +161,7 @@ var dataToTests = []dataToTest{
 			testBytes,
 			"projects/{project_id}/databases/{database_id}/documents/{document_path}",
 			&testLatLng,
-			[]string{"string in array"},
+			[]string{"string in array", "another string in array"},
 			smap{
 				false,
 				123,
