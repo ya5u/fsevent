@@ -115,7 +115,9 @@ func setReflect(v reflect.Value, field map[string]interface{}, tag string) error
 			if !ok {
 				return fmt.Errorf("fsevent: %s is not array", tag)
 			}
-			return setReflect(v.Index(i), f, tag)
+			if err := setReflect(v.Index(i), f, tag); err != nil {
+				return err
+			}
 		}
 	case reflect.Array:
 		vs, err := reflectArray(field, tag)
@@ -134,7 +136,9 @@ func setReflect(v reflect.Value, field map[string]interface{}, tag string) error
 			if !ok {
 				return fmt.Errorf("fsevent: %s is not array", tag)
 			}
-			return setReflect(v.Index(i), f, tag)
+			if err := setReflect(v.Index(i), f, tag); err != nil {
+				return err
+			}
 		}
 	case reflect.Struct:
 		fsm, err := reflectMap(field, tag)
